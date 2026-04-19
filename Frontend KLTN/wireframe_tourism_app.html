@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe – Du lịch thông minh</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --accent: #4f8ef7;
+    --accent2: #f7a84f;
+    --text: #e8eaf6;
+    --text2: #8b90b0;
+    --green: #4fd1a5;
+    --red: #f76f6f;
+    --radius: 12px;
+    --wire: #3a3f5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ========== LAYOUT ========== */
+  .app-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar navigation */
+  .sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo .logo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+
+  .sidebar-logo .logo-sub {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-group {
+    padding: 16px 12px 8px;
+  }
+
+  .nav-group-label {
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 8px 8px;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(79,142,247,0.15); color: var(--accent); font-weight: 600; }
+
+  .nav-item .icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .icon { background: rgba(79,142,247,0.2); }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Screen container */
+  .screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ========== SHARED COMPONENTS ========== */
+  .screen-header {
+    padding: 24px 32px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .screen-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--text);
+  }
+
+  .uc-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  .screen-body {
+    padding: 20px 32px 32px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Wire elements */
+  .wire-box {
+    border: 1.5px dashed var(--wire);
+    border-radius: var(--radius);
+    background: var(--surface);
+    position: relative;
+  }
+
+  .wire-label {
+    position: absolute;
+    top: -10px; left: 14px;
+    background: var(--surface);
+    font-size: 10px;
+    color: var(--text2);
+    padding: 0 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .wire-solid {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    position: relative;
+  }
+
+  /* Search bar */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+
+  .search-bar .search-icon { font-size: 16px; color: var(--text2); }
+  .search-bar .search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  .search-bar .search-input::placeholder { color: var(--text2); }
+
+  /* Tag chips */
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+
+  .tag:hover, .tag.active {
+    background: rgba(79,142,247,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .card:hover { border-color: var(--accent); }
+
+  .card-img {
+    width: 100%;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text2);
+    font-size: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-body { padding: 14px; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 12px; color: var(--text2); }
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--accent2);
+    margin-top: 6px;
+  }
+
+  /* Button */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #3a7ef0; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(247,111,111,0.15); color: var(--red); border: 1px solid rgba(247,111,111,0.3); }
+  .btn-success { background: rgba(79,209,165,0.15); color: var(--green); border: 1px solid rgba(79,209,165,0.3); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+  /* Grid helpers */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .gap-16 { gap: 16px; }
+  .gap-20 { gap: 20px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-20 { margin-top: 20px; }
+
+  /* ========== MAP COMPONENT ========== */
+  .map-area {
+    background: var(--surface2);
+    border-radius: var(--radius);
+    border: 1.5px dashed var(--wire);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .map-marker {
+    position: absolute;
+    background: var(--accent);
+    width: 28px; height: 28px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2px solid white;
+    cursor: pointer;
+  }
+
+  .map-marker::after {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    background: white;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .map-marker.hot { background: var(--accent2); }
+  .map-marker.green { background: var(--green); }
+
+  .map-controls {
+    position: absolute;
+    top: 12px; right: 12px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .map-ctrl-btn {
+    width: 32px; height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer; color: var(--text2);
+  }
+
+  .map-label {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    background: rgba(15,17,23,0.8);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  /* ========== CHATBOT ========== */
+  .chat-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 75%;
+  }
+
+  .chat-bubble.ai {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .chat-bubble.user {
+    background: rgba(79,142,247,0.2);
+    border: 1px solid rgba(79,142,247,0.3);
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+  }
+
+  /* ========== STAT CARD ========== */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .stat-trend { font-size: 12px; color: var(--green); margin-top: 8px; }
+
+  /* Bar chart mock */
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 80px;
+  }
+
+  .bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--accent), rgba(79,142,247,0.3));
+    border-radius: 4px 4px 0 0;
+    min-height: 10px;
+    transition: opacity 0.15s;
+  }
+
+  .bar:hover { opacity: 0.8; }
+
+  /* Table */
+  .wire-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .wire-table th {
+    background: var(--surface2);
+    color: var(--text2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wire-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .wire-table tr:hover td { background: var(--surface2); }
+  .wire-table tr:last-child td { border-bottom: none; }
+
+  /* Status badge */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+  .status.active { background: rgba(79,209,165,0.15); color: var(--green); }
+  .status.active::before { background: var(--green); }
+  .status.inactive { background: rgba(247,111,111,0.15); color: var(--red); }
+  .status.inactive::before { background: var(--red); }
+  .status.pending { background: rgba(247,168,79,0.15); color: var(--accent2); }
+  .status.pending::before { background: var(--accent2); }
+
+  /* Form field */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: var(--text2); font-weight: 500; letter-spacing: 0.3px; }
+  .field input, .field textarea, .field select {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+    resize: none;
+  }
+
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+
+  .field input::placeholder, .field textarea::placeholder { color: var(--text2); }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* Section heading */
+  .section-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Plan step */
+  .plan-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: border-color 0.15s;
+  }
+
+  .plan-step:hover { border-color: var(--accent); }
+
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(79,142,247,0.2);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* AI glow */
+  .ai-glow {
+    box-shadow: 0 0 0 1px rgba(79,142,247,0.3), 0 4px 20px rgba(79,142,247,0.1);
+  }
+
+  /* Hotspot slider mock */
+  .hotspot-slider {
+    display: flex;
+    gap: 12px;
+    overflow-x: hidden;
+  }
+
+  .hotspot-card {
+    flex-shrink: 0;
+    width: 180px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .hotspot-card:hover { border-color: var(--accent2); }
+
+  .hotspot-img {
+    height: 100px;
+    background: linear-gradient(135deg, var(--surface2), var(--border));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+  }
+
+  .hotspot-body { padding: 10px; }
+  .hotspot-name { font-size: 13px; font-weight: 600; }
+  .hotspot-type { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* Login card */
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 380px;
+    margin: auto;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ========== BANNER ========== */
+  .hero-banner {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 180px;
+    background: linear-gradient(135deg, #0d1b3e 0%, #1a3a6e 40%, #0f2d55 70%, #051428 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 36px;
+    border: 1px solid rgba(79,142,247,0.25);
+  }
+
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(79,142,247,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(79,209,165,0.1) 0%, transparent 60%);
+  }
+
+  .hero-banner-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .hero-banner-content {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .hero-banner-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-banner-eyebrow::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .hero-banner-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .hero-banner-title span {
+    color: var(--accent2);
+  }
+
+  .hero-banner-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    max-width: 420px;
+  }
+
+  .hero-banner-art {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.15;
+    filter: blur(1px);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .hero-banner-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(247,168,79,0.2);
+    border: 1px solid rgba(247,168,79,0.4);
+    color: var(--accent2);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ========== CAROUSEL ========== */
+  .carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 16px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .carousel-slide {
+    flex-shrink: 0;
+    width: calc(25% - 12px);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .carousel-slide:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .carousel-slide-img {
+    height: 140px;
+    background: linear-gradient(135deg, var(--surface2), #1e2438);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-slide-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5));
+  }
+
+  .carousel-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15,17,23,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 2;
+    backdrop-filter: blur(2px);
+  }
+
+  .carousel-slide:hover .carousel-overlay {
+    opacity: 1;
+  }
+
+  .carousel-cta {
+    background: var(--accent);
+    color: white;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transform: translateY(6px);
+    transition: transform 0.25s;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(79,142,247,0.5);
+  }
+
+  .carousel-slide:hover .carousel-cta {
+    transform: translateY(0);
+  }
+
+  .carousel-slide-body {
+    padding: 12px 14px;
+  }
+
+  .carousel-slide-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .carousel-slide-type {
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+
+  .carousel-nav {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .carousel-dot.active {
+    width: 20px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.15s;
+  }
+
+  .carousel-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .carousel-btn.prev { left: -8px; }
+  .carousel-btn.next { right: -8px; }
+
+  /* Map CTA overlay */
+  .map-cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,12,20,0.52);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    backdrop-filter: blur(3px);
+    border-radius: var(--radius);
+    z-index: 10;
+  }
+
+  .map-cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+  }
+
+  .map-cta-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-title">VietTravel AI</div>
+      <div class="logo-sub">Wireframe System</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">👤 User</div>
+
+      <div class="nav-item active" onclick="show('home')">
+        <div class="icon">🏠</div> Trang chủ
+      </div>
+      <div class="nav-item" onclick="show('uc1')">
+        <div class="icon">🗺️</div> UC1 – Xem bản đồ
+      </div>
+      <div class="nav-item" onclick="show('uc2')">
+        <div class="icon">🔍</div> UC2 – Tìm kiếm
+      </div>
+      <div class="nav-item" onclick="show('uc3')">
+        <div class="icon">📍</div> UC3 – Chi tiết địa điểm
+      </div>
+      <div class="nav-item" onclick="show('uc5')">
+        <div class="icon">🤖</div> UC5 – Gợi ý AI
+      </div>
+      <div class="nav-item" onclick="show('uc6')">
+        <div class="icon">📋</div> UC6 – Tạo kế hoạch
+      </div>
+      <div class="nav-item" onclick="show('uc7')">
+        <div class="icon">⚙️</div> UC7 – Quản lý kế hoạch
+      </div>
+      <div class="nav-item" onclick="show('uc9')">
+        <div class="icon">💬</div> UC9 – Chat AI
+      </div>
+      <div class="nav-item" onclick="show('uc10')">
+        <div class="icon">✍️</div> UC10 – Viết đánh giá
+      </div>
+      <div class="nav-item" onclick="show('uc11')">
+        <div class="icon">⭐</div> UC11 – Xem đánh giá
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">🛡️ Admin</div>
+
+      <div class="nav-item" onclick="show('uc12')">
+        <div class="icon">🔐</div> UC12 – Đăng nhập
+      </div>
+      <div class="nav-item" onclick="show('uc13')">
+        <div class="icon">🏛️</div> UC13 – Quản lý địa điểm
+      </div>
+      <div class="nav-item" onclick="show('uc14')">
+        <div class="icon">👥</div> UC14 – Quản lý user
+      </div>
+      <div class="nav-item" onclick="show('uc15')">
+        <div class="icon">💬</div> UC15 – Quản lý đánh giá
+      </div>
+      <div class="nav-item" onclick="show('uc16')">
+        <div class="icon">📊</div> UC16 – Thống kê
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== SCREENS ===== -->
+  <div class="main">
+
+    <!-- HOME: Trang chủ -->
+    <div class="screen active" id="home">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Trang chủ</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Banner khẩu hiệu · Carousel điểm hot · Danh mục · Bản đồ</div>
+        </div>
+        <div class="uc-badge">Trang chủ – Home Screen</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+
+        <!-- Search bar -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" placeholder="Tìm địa điểm, loại hình, từ khoá…" readonly>
+          <button class="btn btn-primary btn-sm" onclick="show('uc1')">🗺 Bản đồ</button>
+        </div>
+
+        <!-- HERO BANNER -->
+        <div class="hero-banner">
+          <div class="hero-banner-dots"></div>
+          <div class="hero-banner-art">🌏</div>
+          <div class="hero-banner-badge">✦ Mùa hè 2025</div>
+          <div class="hero-banner-content">
+            <div class="hero-banner-eyebrow">Khám phá Việt Nam</div>
+            <div class="hero-banner-title">Hành trình của bạn<br>bắt đầu từ <span>đây</span></div>
+            <div class="hero-banner-sub">Hơn 1.200 địa điểm du lịch được tuyển chọn kỹ lưỡng — di tích, ẩm thực, thiên nhiên, trải nghiệm văn hoá.</div>
+          </div>
+        </div>
+
+        <!-- CAROUSEL: Điểm hot -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div class="section-heading" style="margin-bottom:0;">🔥 Điểm hot khu vực</div>
+            <span style="font-size:12px;color:var(--accent);cursor:pointer;">Xem tất cả →</span>
+          </div>
+
+          <div class="carousel-wrapper">
+            <div class="carousel-btn prev" onclick="slideCarousel(-1)">‹</div>
+            <div class="carousel-btn next" onclick="slideCarousel(1)">›</div>
+
+            <div class="carousel-track" id="carouselTrack">
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#1a2a1a,#2a3d2a);">
+                  🏛️
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Hoàng Thành Thăng Long</div>
+                  <div class="carousel-slide-type">🏛 Di tích lịch sử</div>
+                  <div class="rating">★★★★★ 4.9 <span style="color:var(--text2);">(521)</span></div>
+                </div>
+              </div>
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#0d1f2d,#1a3040);">
+                  🌊
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Hồ Hoàn Kiếm</div>
+                  <div class="carousel-slide-type">🌿 Thiên nhiên</div>
+                  <div class="rating">★★★★★ 4.8 <span style="color:var(--text2);">(1.2k)</span></div>
+                </div>
+              </div>
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#2d1a0d,#3d2a10);">
+                  🍜
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Phố Ẩm thực Tạ Hiện</div>
+                  <div class="carousel-slide-type">🍜 Ẩm thực</div>
+                  <div class="rating">★★★★★ 4.8 <span style="color:var(--text2);">(876)</span></div>
+                </div>
+              </div>
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#1a1a2d,#2a2a3d);">
+                  ⛩️
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Văn Miếu Quốc Tử Giám</div>
+                  <div class="carousel-slide-type">🏛 Di tích</div>
+                  <div class="rating">★★★★☆ 4.6 <span style="color:var(--text2);">(340)</span></div>
+                </div>
+              </div>
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#0d1a1a,#102828);">
+                  🎨
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Bảo tàng Mỹ thuật VN</div>
+                  <div class="carousel-slide-type">🎭 Văn hoá</div>
+                  <div class="rating">★★★★☆ 4.5 <span style="color:var(--text2);">(198)</span></div>
+                </div>
+              </div>
+
+              <div class="carousel-slide">
+                <div class="carousel-slide-img" style="background:linear-gradient(135deg,#1e1420,#2a1830);">
+                  🛍️
+                  <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="show('uc3')">🧭 Khám phá ngay!</button>
+                  </div>
+                </div>
+                <div class="carousel-slide-body">
+                  <div class="carousel-slide-name">Chợ Đồng Xuân</div>
+                  <div class="carousel-slide-type">🛍 Mua sắm</div>
+                  <div class="rating">★★★★☆ 4.4 <span style="color:var(--text2);">(423)</span></div>
+                </div>
+              </div>
+
+            </div><!-- end track -->
+
+            <!-- Dots -->
+            <div class="carousel-nav">
+              <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+              <div class="carousel-dot" onclick="goToSlide(1)"></div>
+              <div class="carousel-dot" onclick="goToSlide(2)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div>
+          <div class="section-heading">Danh mục</div>
+          <div class="tag-row">
+            <div class="tag active">🏛 Di tích</div>
+            <div class="tag">🍜 Ẩm thực</div>
+            <div class="tag">🌿 Thiên nhiên</div>
+            <div class="tag">🛍 Mua sắm</div>
+            <div class="tag">🏨 Lưu trú</div>
+            <div class="tag">🎭 Giải trí</div>
+          </div>
+        </div>
+
+        <!-- Map preview with CTA -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div class="section-heading" style="margin-bottom:0;">Bản đồ khu vực</div>
+          </div>
+          <div class="map-area" style="height:200px;position:relative;">
+            <div class="map-grid"></div>
+            <div class="map-marker" style="top:35%;left:40%;"></div>
+            <div class="map-marker hot" style="top:50%;left:55%;"></div>
+            <div class="map-marker green" style="top:60%;left:35%;"></div>
+            <div class="map-marker" style="top:28%;left:65%;"></div>
+            <div class="map-marker hot" style="top:70%;left:60%;"></div>
+            <!-- CTA overlay -->
+            <div class="map-cta-overlay">
+              <div class="map-cta-title">📍 Xem bản đồ đầy đủ</div>
+              <div class="map-cta-sub">Tìm địa điểm theo vị trí · Zoom · Lọc theo danh mục</div>
+              <button class="btn btn-primary" onclick="show('uc1')" style="margin-top:4px;">🗺 Mở bản đồ</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- UC1: Xem bản đồ -->
+    <div class="screen" id="uc1">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Bản đồ khu vực</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Xem · Điều hướng · Zoom · Lọc địa điểm trên bản đồ</div>
+        </div>
+        <div class="uc-badge">UC1 – Xem bản đồ khu vực</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-14">
+
+        <!-- Topbar -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="search-bar" style="flex:1;">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" placeholder="Tìm địa điểm trên bản đồ…" readonly>
+          </div>
+          <div class="tag-row" style="flex-shrink:0;">
+            <div class="tag active">Tất cả</div>
+            <div class="tag">🏛 Di tích</div>
+            <div class="tag">🍜 Ẩm thực</div>
+            <div class="tag">🌿 TN</div>
+          </div>
+        </div>
+
+        <!-- Full map -->
+        <div style="position:relative;">
+          <div class="map-area" style="height:440px;">
+            <div class="map-grid"></div>
+
+            <!-- Markers -->
+            <div class="map-marker" style="top:25%;left:38%;" title="Văn Miếu"></div>
+            <div class="map-marker hot" style="top:40%;left:52%;" title="Phở Thìn"></div>
+            <div class="map-marker green" style="top:52%;left:33%;" title="Hồ Hoàn Kiếm"></div>
+            <div class="map-marker" style="top:20%;left:62%;" title="Hoàng Thành"></div>
+            <div class="map-marker hot" style="top:63%;left:58%;" title="Ẩm thực Tạ Hiện"></div>
+            <div class="map-marker green" style="top:35%;left:70%;" title="Hồ Tây"></div>
+            <div class="map-marker" style="top:68%;left:42%;" title="Chùa Một Cột"></div>
+            <div class="map-marker hot" style="top:55%;left:75%;" title="Bún Chả Hương Liên"></div>
+
+            <!-- Popup tooltip on one marker -->
+            <div style="position:absolute;top:calc(40% - 90px);left:calc(52% - 10px);background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:10px 13px;font-size:12px;width:170px;z-index:20;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+              <div style="font-weight:700;margin-bottom:2px;">Phở Thìn Lò Đúc</div>
+              <div style="color:var(--text2);font-size:11px;">🍜 Ẩm thực · 0.8km</div>
+              <div class="rating" style="margin:4px 0;">★★★★★ 4.9</div>
+              <button class="btn btn-primary btn-sm" onclick="show('uc3')" style="width:100%;justify-content:center;font-size:11px;">Xem chi tiết</button>
+              <div style="position:absolute;bottom:-7px;left:18px;width:12px;height:12px;background:var(--surface);border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:rotate(45deg);"></div>
+            </div>
+
+            <!-- Map controls -->
+            <div class="map-controls">
+              <div class="map-ctrl-btn">＋</div>
+              <div class="map-ctrl-btn">－</div>
+              <div class="map-ctrl-btn">⊙</div>
+            </div>
+
+            <div class="map-label">📍 Hà Nội &nbsp;|&nbsp; 🔵 Di tích &nbsp; 🟠 Ẩm thực &nbsp; 🟢 Thiên nhiên</div>
+          </div>
+        </div>
+
+        <!-- Bottom: nearby list -->
+        <div>
+          <div class="section-heading">Địa điểm trong khu vực đang xem</div>
+          <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;">
+            <div class="wire-solid" style="min-width:200px;padding:12px;flex-shrink:0;cursor:pointer;" onclick="show('uc3')">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-size:22px;">🍜</span>
+                <div>
+                  <div style="font-size:13px;font-weight:600;">Phở Thìn Lò Đúc</div>
+                  <div style="font-size:11px;color:var(--text2);">0.8km · ★★★★★ 4.9</div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-solid" style="min-width:200px;padding:12px;flex-shrink:0;cursor:pointer;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-size:22px;">🌊</span>
+                <div>
+                  <div style="font-size:13px;font-weight:600;">Hồ Hoàn Kiếm</div>
+                  <div style="font-size:11px;color:var(--text2);">1.2km · ★★★★★ 4.8</div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-solid" style="min-width:200px;padding:12px;flex-shrink:0;cursor:pointer;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-size:22px;">🏛️</span>
+                <div>
+                  <div style="font-size:13px;font-weight:600;">Văn Miếu</div>
+                  <div style="font-size:11px;color:var(--text2);">2.1km · ★★★★☆ 4.6</div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-solid" style="min-width:200px;padding:12px;flex-shrink:0;cursor:pointer;">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-size:22px;">⛩️</span>
+                <div>
+                  <div style="font-size:13px;font-weight:600;">Chùa Một Cột</div>
+                  <div style="font-size:11px;color:var(--text2);">2.8km · ★★★★☆ 4.5</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- UC2: Tìm kiếm -->
+    <div class="screen" id="uc2">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Tìm kiếm địa điểm</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Nhập từ khoá · Lọc loại hình · Chọn khu vực/bán kính</div>
+        </div>
+        <div class="uc-badge">UC2 – Tìm kiếm địa điểm</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <!-- Search -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" value="phở Hà Nội" readonly>
+          <button class="btn btn-secondary btn-sm">Lọc ▼</button>
+          <button class="btn btn-primary btn-sm">Tìm</button>
+        </div>
+
+        <!-- Filter row -->
+        <div class="wire-box" style="padding:14px;">
+          <span class="wire-label">Bộ lọc</span>
+          <div class="grid-3 gap-12" style="margin-top:8px;">
+            <div class="field">
+              <label>Loại hình</label>
+              <select><option>Ẩm thực</option></select>
+            </div>
+            <div class="field">
+              <label>Khu vực</label>
+              <select><option>Hoàn Kiếm</option></select>
+            </div>
+            <div class="field">
+              <label>Bán kính</label>
+              <select><option>5 km</option></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div>
+          <div class="section-heading">Kết quả tìm kiếm <span style="color:var(--accent);font-size:12px;font-weight:400;">12 địa điểm</span></div>
+          <div class="flex flex-col gap-8">
+            <!-- Result item -->
+            <div onclick="show('uc3')" style="cursor:pointer;" class="wire-solid" style="">
+              <div style="display:flex;gap:12px;padding:14px;align-items:center;">
+                <div style="width:64px;height:64px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🍜</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600;font-size:14px;">Phở Thìn Lò Đúc</div>
+                  <div style="font-size:12px;color:var(--text2);">Ẩm thực · Hai Bà Trưng · 1.2km</div>
+                  <div class="rating">★★★★★ 4.9 <span style="color:var(--text2);margin-left:4px;">(342 đánh giá)</span></div>
+                </div>
+                <button class="btn btn-secondary btn-sm">Xem →</button>
+              </div>
+            </div>
+
+            <div class="wire-solid">
+              <div style="display:flex;gap:12px;padding:14px;align-items:center;">
+                <div style="width:64px;height:64px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🥢</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600;font-size:14px;">Bún Bò Huế Bà Tuyết</div>
+                  <div style="font-size:12px;color:var(--text2);">Ẩm thực · Đống Đa · 2.1km</div>
+                  <div class="rating">★★★★☆ 4.6 <span style="color:var(--text2);margin-left:4px;">(178 đánh giá)</span></div>
+                </div>
+                <button class="btn btn-secondary btn-sm">Xem →</button>
+              </div>
+            </div>
+
+            <div class="wire-solid">
+              <div style="display:flex;gap:12px;padding:14px;align-items:center;">
+                <div style="width:64px;height:64px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🍲</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600;font-size:14px;">Phở Gia Truyền Bát Đàn</div>
+                  <div style="font-size:12px;color:var(--text2);">Ẩm thực · Hoàn Kiếm · 0.5km</div>
+                  <div class="rating">★★★★★ 4.8 <span style="color:var(--text2);margin-left:4px;">(521 đánh giá)</span></div>
+                </div>
+                <button class="btn btn-secondary btn-sm">Xem →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map mini -->
+        <div class="map-area" style="height:180px;">
+          <div class="map-grid"></div>
+          <div class="map-marker hot" style="top:40%;left:45%;"></div>
+          <div class="map-marker hot" style="top:55%;left:60%;"></div>
+          <div class="map-marker hot" style="top:30%;left:35%;"></div>
+          <div class="map-label">Kết quả trên bản đồ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC3: Chi tiết -->
+    <div class="screen" id="uc3">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Chi tiết địa điểm</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Thông tin đầy đủ · Ảnh · Đánh giá · Thêm vào kế hoạch</div>
+        </div>
+        <div class="uc-badge">UC3 – Xem chi tiết</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+
+        <!-- Back -->
+        <button onclick="show('uc2')" class="btn btn-secondary btn-sm" style="align-self:flex-start;">← Quay lại kết quả</button>
+
+        <!-- Hero -->
+        <div style="background:var(--surface2);border-radius:var(--radius);height:200px;display:flex;align-items:center;justify-content:center;font-size:60px;border:1.5px dashed var(--wire);">
+          🍜
+          <span style="position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,0.6);padding:4px 10px;border-radius:6px;font-size:11px;color:var(--text2);">📸 12 ảnh</span>
+        </div>
+
+        <!-- Info -->
+        <div class="grid-2 gap-16">
+          <div class="flex flex-col gap-12">
+            <div>
+              <div style="font-size:22px;font-weight:700;">Phở Thìn Lò Đúc</div>
+              <div style="color:var(--text2);font-size:13px;margin-top:4px;">🍜 Ẩm thực · 📍 13 Lò Đúc, Hai Bà Trưng, Hà Nội</div>
+              <div class="rating" style="font-size:14px;margin-top:8px;">★★★★★ <strong>4.9</strong> <span style="color:var(--text2);">(342 đánh giá)</span></div>
+            </div>
+            <div class="wire-solid" style="padding:14px;">
+              <div style="font-size:12px;color:var(--text2);line-height:1.7;">
+                Phở Thìn Lò Đúc là một trong những quán phở lâu đời nhất Hà Nội, nổi tiếng với nước dùng trong veo được hầm từ xương bò...
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;font-size:13px;color:var(--text2);">
+              <span>🕐 6:00 – 22:00</span>
+              <span>📞 024 3971 2345</span>
+              <span>💰 50–100k</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-12">
+            <div class="map-area" style="height:160px;">
+              <div class="map-grid"></div>
+              <div class="map-marker hot" style="top:45%;left:48%;"></div>
+              <div class="map-label">13 Lò Đúc</div>
+            </div>
+            <div class="flex gap-8">
+              <button onclick="show('uc6')" class="btn btn-primary" style="flex:1;">＋ Thêm vào kế hoạch</button>
+              <button onclick="show('uc10')" class="btn btn-secondary">✍ Đánh giá</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Đánh giá preview -->
+        <div>
+          <div class="section-heading">Đánh giá nổi bật</div>
+          <div class="flex flex-col gap-8">
+            <div class="wire-solid" style="padding:12px;">
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;">👤</div>
+                <div>
+                  <div style="font-size:13px;font-weight:600;">Nguyễn Văn A</div>
+                  <div style="font-size:11px;color:var(--text2);">★★★★★ · 2 ngày trước</div>
+                </div>
+              </div>
+              <div style="font-size:13px;color:var(--text2);line-height:1.6;">Phở ngon tuyệt vời! Nước dùng đậm đà, thịt mềm. Sẽ quay lại lần sau.</div>
+            </div>
+          </div>
+          <button onclick="show('uc11')" class="btn btn-secondary btn-sm" style="margin-top:10px;">Xem tất cả đánh giá →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC5: Gợi ý AI -->
+    <div class="screen" id="uc5">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Gợi ý từ AI</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">AI phân tích ngữ cảnh và đề xuất địa điểm phù hợp</div>
+        </div>
+        <div class="uc-badge">UC5 – Nhận gợi ý AI</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+
+        <!-- Preference input -->
+        <div class="wire-box ai-glow" style="padding:18px;">
+          <span class="wire-label">Nhập sở thích để AI phân tích</span>
+          <div class="flex flex-col gap-12" style="margin-top:8px;">
+            <div class="tag-row">
+              <div class="tag active">🏛 Lịch sử</div>
+              <div class="tag active">🍜 Ẩm thực</div>
+              <div class="tag">🌿 Thiên nhiên</div>
+              <div class="tag">🎭 Văn hoá</div>
+              <div class="tag">🛍 Mua sắm</div>
+            </div>
+            <div class="field">
+              <label>Mô tả chuyến đi (tuỳ chọn)</label>
+              <input placeholder="VD: 2 ngày ở Hà Nội, muốn khám phá ẩm thực và lịch sử...">
+            </div>
+            <button class="btn btn-primary" style="align-self:flex-start;">🤖 Nhận gợi ý AI</button>
+          </div>
+        </div>
+
+        <!-- AI Response -->
+        <div>
+          <div class="section-heading">🤖 AI đề xuất cho bạn</div>
+          <div style="background:rgba(79,142,247,0.05);border:1px solid rgba(79,142,247,0.2);border-radius:var(--radius);padding:14px;margin-bottom:12px;font-size:13px;color:var(--text2);line-height:1.7;">
+            Dựa trên sở thích <strong style="color:var(--accent);">Lịch sử + Ẩm thực</strong>, AI gợi ý lộ trình kết hợp tham quan di tích buổi sáng và trải nghiệm ẩm thực phố cổ buổi chiều...
+          </div>
+          <div class="grid-3 gap-12">
+            <div onclick="show('uc3')" class="card" style="cursor:pointer;">
+              <div class="card-img" style="height:90px;">🏛️</div>
+              <div class="card-body">
+                <div class="card-title">Văn Miếu Quốc Tử Giám</div>
+                <div class="card-sub">Di tích · Đống Đa</div>
+                <div class="rating">★★★★★ 4.8</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:6px;">🤖 Phù hợp 98%</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img" style="height:90px;">🍜</div>
+              <div class="card-body">
+                <div class="card-title">Bún Chả Hương Liên</div>
+                <div class="card-sub">Ẩm thực · Đống Đa</div>
+                <div class="rating">★★★★★ 4.9</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:6px;">🤖 Phù hợp 95%</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img" style="height:90px;">🎨</div>
+              <div class="card-body">
+                <div class="card-title">Bảo tàng Mỹ thuật</div>
+                <div class="card-sub">Văn hoá · Ba Đình</div>
+                <div class="rating">★★★★☆ 4.6</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:6px;">🤖 Phù hợp 90%</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <button onclick="show('uc6')" class="btn btn-primary btn-sm">＋ Tạo kế hoạch từ gợi ý này</button>
+            <button class="btn btn-secondary btn-sm">🔄 Gợi ý lại</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- UC6: Tạo kế hoạch -->
+    <div class="screen" id="uc6">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Tạo kế hoạch du lịch</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Chọn lộ trình mẫu hoặc tự tạo thủ công</div>
+        </div>
+        <div class="uc-badge">UC6 – Tạo kế hoạch</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+
+        <!-- Template section (fix cứng) -->
+        <div class="wire-box" style="padding:16px;border-color:var(--accent2);background:rgba(247,168,79,0.04);">
+          <span class="wire-label" style="color:var(--accent2);">Lộ trình mẫu (No-AI · biên soạn sẵn)</span>
+          <div style="margin-top:8px;margin-bottom:12px;font-size:13px;color:var(--text2);">Chọn một lộ trình có sẵn để bắt đầu nhanh, sau đó tùy chỉnh theo ý muốn</div>
+          <div class="grid-3 gap-12">
+            <div class="wire-solid" style="padding:12px;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='var(--border)'">
+              <div style="font-size:18px;margin-bottom:6px;">🏛️</div>
+              <div style="font-size:13px;font-weight:600;">Hà Nội Cổ điển</div>
+              <div style="font-size:11px;color:var(--text2);">2 ngày · 6 địa điểm</div>
+              <button class="btn btn-sm" style="margin-top:8px;background:rgba(247,168,79,0.15);color:var(--accent2);border:1px solid rgba(247,168,79,0.3);">Dùng lộ trình này</button>
+            </div>
+            <div class="wire-solid" style="padding:12px;cursor:pointer;">
+              <div style="font-size:18px;margin-bottom:6px;">🍜</div>
+              <div style="font-size:13px;font-weight:600;">Ẩm thực Phố cổ</div>
+              <div style="font-size:11px;color:var(--text2);">1 ngày · 5 địa điểm</div>
+              <button class="btn btn-sm" style="margin-top:8px;background:rgba(247,168,79,0.15);color:var(--accent2);border:1px solid rgba(247,168,79,0.3);">Dùng lộ trình này</button>
+            </div>
+            <div class="wire-solid" style="padding:12px;cursor:pointer;">
+              <div style="font-size:18px;margin-bottom:6px;">🌿</div>
+              <div style="font-size:13px;font-weight:600;">Thiên nhiên & Hồ</div>
+              <div style="font-size:11px;color:var(--text2);">1 ngày · 4 địa điểm</div>
+              <button class="btn btn-sm" style="margin-top:8px;background:rgba(247,168,79,0.15);color:var(--accent2);border:1px solid rgba(247,168,79,0.3);">Dùng lộ trình này</button>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:10px;">
+            <span style="font-size:12px;color:var(--text2);">─── hoặc ───</span>
+          </div>
+        </div>
+
+        <!-- Manual plan builder -->
+        <div>
+          <div class="section-heading">Tự tạo kế hoạch thủ công</div>
+          <div class="flex flex-col gap-12">
+            <div class="grid-2 gap-12">
+              <div class="field">
+                <label>Tên kế hoạch</label>
+                <input placeholder="VD: Hà Nội 3 ngày 2023">
+              </div>
+              <div class="field">
+                <label>Thời gian</label>
+                <input placeholder="15/01 – 17/01/2025">
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:8px;">Các địa điểm đã thêm</div>
+              <div class="flex flex-col gap-8">
+                <div class="plan-step">
+                  <div class="step-num">1</div>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:600;">Văn Miếu Quốc Tử Giám</div>
+                    <div style="font-size:11px;color:var(--text2);">🕐 Sáng · ⏱ 2 giờ</div>
+                  </div>
+                  <button class="btn btn-danger btn-sm">✕</button>
+                </div>
+                <div class="plan-step">
+                  <div class="step-num">2</div>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:600;">Bún Chả Hương Liên</div>
+                    <div style="font-size:11px;color:var(--text2);">🕐 Trưa · ⏱ 1 giờ</div>
+                  </div>
+                  <button class="btn btn-danger btn-sm">✕</button>
+                </div>
+                <div class="plan-step">
+                  <div class="step-num">3</div>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:600;">Hồ Hoàn Kiếm</div>
+                    <div style="font-size:11px;color:var(--text2);">🕐 Chiều · ⏱ 1.5 giờ</div>
+                  </div>
+                  <button class="btn btn-danger btn-sm">✕</button>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:8px;">＋ Thêm địa điểm</button>
+            </div>
+
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button class="btn btn-secondary">Huỷ</button>
+              <button onclick="show('uc7')" class="btn btn-primary">💾 Lưu kế hoạch</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- UC7: Quản lý kế hoạch -->
+    <div class="screen" id="uc7">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Kế hoạch của tôi</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Xem, chỉnh sửa và xoá các kế hoạch đã tạo</div>
+        </div>
+        <div class="uc-badge">UC7 – Quản lý kế hoạch</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <div style="display:flex;justify-content:flex-end;">
+          <button onclick="show('uc6')" class="btn btn-primary btn-sm">＋ Tạo kế hoạch mới</button>
+        </div>
+
+        <div class="flex flex-col gap-12">
+          <!-- Plan card 1 -->
+          <div class="wire-solid" style="padding:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-size:16px;font-weight:700;">Hà Nội 3 ngày khám phá</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px;">📅 15/01 – 17/01/2025 · 📍 6 địa điểm</div>
+              </div>
+              <div class="status active">Hoạt động</div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+              <span style="background:var(--surface2);padding:3px 8px;border-radius:4px;font-size:11px;color:var(--text2);">🏛 Văn Miếu</span>
+              <span style="background:var(--surface2);padding:3px 8px;border-radius:4px;font-size:11px;color:var(--text2);">🍜 Bún Chả</span>
+              <span style="background:var(--surface2);padding:3px 8px;border-radius:4px;font-size:11px;color:var(--text2);">🌊 Hồ Hoàn Kiếm</span>
+              <span style="background:var(--surface2);padding:3px 8px;border-radius:4px;font-size:11px;color:var(--text2);">+3</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <button class="btn btn-secondary btn-sm">✏️ Chỉnh sửa</button>
+              <button class="btn btn-danger btn-sm">🗑 Xoá</button>
+              <button onclick="show('uc9')" class="btn btn-sm ai-glow" style="background:rgba(79,142,247,0.15);color:var(--accent);border:1px solid rgba(79,142,247,0.3);">🤖 Tư vấn AI</button>
+            </div>
+          </div>
+
+          <!-- Plan card 2 -->
+          <div class="wire-solid" style="padding:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-size:16px;font-weight:700;">Đà Lạt cuối tuần</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px;">📅 20/01 – 22/01/2025 · 📍 4 địa điểm</div>
+              </div>
+              <div class="status pending">Bản nháp</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <button class="btn btn-secondary btn-sm">✏️ Chỉnh sửa</button>
+              <button class="btn btn-danger btn-sm">🗑 Xoá</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC9: Chat AI -->
+    <div class="screen" id="uc9">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Chat với AI</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Đặt câu hỏi về du lịch · Tư vấn kế hoạch</div>
+        </div>
+        <div class="uc-badge">UC9 – Chat AI Chatbot</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-0" style="height:calc(100vh - 120px);">
+        <!-- Chat area -->
+        <div style="flex:1;overflow-y:auto;padding:16px 0;display:flex;flex-direction:column;gap:12px;">
+
+          <!-- AI greeting -->
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(79,142,247,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+            <div>
+              <div class="chat-bubble ai">Xin chào! Tôi là trợ lý du lịch AI. Bạn muốn khám phá địa điểm nào hôm nay?</div>
+              <div style="font-size:10px;color:var(--text2);margin-top:4px;">AI · 10:30</div>
+            </div>
+          </div>
+
+          <!-- User msg -->
+          <div style="display:flex;justify-content:flex-end;gap:10px;align-items:flex-start;">
+            <div>
+              <div class="chat-bubble user">Tôi có 2 ngày ở Hà Nội, muốn tham quan lịch sử và ăn phở ngon, gợi ý cho tôi với?</div>
+              <div style="font-size:10px;color:var(--text2);margin-top:4px;text-align:right;">Bạn · 10:31</div>
+            </div>
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">👤</div>
+          </div>
+
+          <!-- AI response -->
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(79,142,247,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+            <div>
+              <div class="chat-bubble ai">
+                Tuyệt! Với 2 ngày ở Hà Nội, tôi gợi ý:<br><br>
+                🌅 <strong>Ngày 1:</strong> Văn Miếu → Phở Thìn Lò Đúc → Hồ Hoàn Kiếm<br>
+                🌄 <strong>Ngày 2:</strong> Hoàng Thành → Bún Chả Hương Liên → Phố Cổ
+              </div>
+              <div style="font-size:10px;color:var(--text2);margin-top:4px;">AI · 10:32</div>
+              <button onclick="show('uc6')" class="btn btn-sm ai-glow" style="margin-top:8px;background:rgba(79,142,247,0.15);color:var(--accent);border:1px solid rgba(79,142,247,0.3);font-size:12px;">📋 Tạo kế hoạch từ gợi ý này</button>
+            </div>
+          </div>
+
+          <!-- Typing indicator -->
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(79,142,247,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+            <div class="chat-bubble ai" style="padding:14px 18px;">
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span style="width:6px;height:6px;background:var(--text2);border-radius:50%;animation:pulse 1s infinite;"></span>
+                <span style="width:6px;height:6px;background:var(--text2);border-radius:50%;animation:pulse 1s 0.2s infinite;"></span>
+                <span style="width:6px;height:6px;background:var(--text2);border-radius:50%;animation:pulse 1s 0.4s infinite;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input bar -->
+        <div style="border-top:1px solid var(--border);padding-top:12px;">
+          <div class="search-bar">
+            <input class="search-input" placeholder="Nhập câu hỏi về du lịch...">
+            <button class="btn btn-primary btn-sm">Gửi ↑</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <div class="tag" style="font-size:11px;">Gợi ý địa điểm gần đây</div>
+            <div class="tag" style="font-size:11px;">Lịch trình 2 ngày</div>
+            <div class="tag" style="font-size:11px;">Ăn gì ở Hà Nội?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC10: Viết đánh giá -->
+    <div class="screen" id="uc10">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Viết đánh giá</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Chia sẻ trải nghiệm của bạn về địa điểm</div>
+        </div>
+        <div class="uc-badge">UC10 – Viết đánh giá</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <div class="wire-solid" style="padding:12px;display:flex;gap:12px;align-items:center;">
+          <div style="font-size:28px;">🍜</div>
+          <div>
+            <div style="font-weight:600;">Phở Thìn Lò Đúc</div>
+            <div style="font-size:12px;color:var(--text2);">Ẩm thực · 13 Lò Đúc, Hà Nội</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-12">
+          <!-- Star rating -->
+          <div>
+            <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:8px;">Đánh giá sao</div>
+            <div style="display:flex;gap:8px;">
+              <span style="font-size:32px;cursor:pointer;filter:grayscale(0);">★</span>
+              <span style="font-size:32px;cursor:pointer;">★</span>
+              <span style="font-size:32px;cursor:pointer;filter:grayscale(1);">★</span>
+              <span style="font-size:32px;cursor:pointer;filter:grayscale(1);">★</span>
+              <span style="font-size:32px;cursor:pointer;filter:grayscale(1);">★</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Tiêu đề đánh giá</label>
+            <input placeholder="Tóm tắt trải nghiệm của bạn...">
+          </div>
+
+          <div class="field">
+            <label>Nội dung chi tiết</label>
+            <textarea rows="5" placeholder="Kể về chuyến đi, món ăn, dịch vụ, không gian..."></textarea>
+          </div>
+
+          <div class="wire-box" style="padding:14px;">
+            <span class="wire-label">Ảnh đính kèm</span>
+            <div style="margin-top:8px;display:flex;gap:8px;">
+              <div style="width:80px;height:80px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1.5px dashed var(--wire);cursor:pointer;">📸</div>
+              <div style="width:80px;height:80px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1.5px dashed var(--wire);cursor:pointer;">＋</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button onclick="show('uc3')" class="btn btn-secondary">Huỷ</button>
+            <button class="btn btn-primary">📤 Gửi đánh giá</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC11: Xem đánh giá -->
+    <div class="screen" id="uc11">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Đánh giá địa điểm</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Phở Thìn Lò Đúc · 342 đánh giá</div>
+        </div>
+        <div class="uc-badge">UC11 – Xem đánh giá</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <!-- Summary -->
+        <div class="wire-solid" style="padding:16px;">
+          <div style="display:flex;gap:24px;align-items:center;">
+            <div style="text-align:center;">
+              <div style="font-family:'Playfair Display',serif;font-size:48px;color:var(--accent2);line-height:1;">4.9</div>
+              <div style="color:var(--accent2);font-size:18px;">★★★★★</div>
+              <div style="font-size:11px;color:var(--text2);">342 đánh giá</div>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+                  <span style="width:16px;">5★</span>
+                  <div style="flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                    <div style="width:85%;height:100%;background:var(--accent2);border-radius:3px;"></div>
+                  </div>
+                  <span style="color:var(--text2);">290</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+                  <span style="width:16px;">4★</span>
+                  <div style="flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                    <div style="width:12%;height:100%;background:var(--accent2);border-radius:3px;"></div>
+                  </div>
+                  <span style="color:var(--text2);">40</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+                  <span style="width:16px;">3★</span>
+                  <div style="flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                    <div style="width:4%;height:100%;background:var(--accent2);border-radius:3px;"></div>
+                  </div>
+                  <span style="color:var(--text2);">12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="tag-row">
+          <div class="tag active">Tất cả</div>
+          <div class="tag">★★★★★</div>
+          <div class="tag">★★★★</div>
+          <div class="tag">Có ảnh</div>
+          <div class="tag">Mới nhất</div>
+        </div>
+
+        <!-- Reviews list -->
+        <div class="flex flex-col gap-10">
+          <div class="wire-solid" style="padding:14px;">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;">👤</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;">Nguyễn Văn A</div>
+                <div style="font-size:11px;color:var(--text2);">★★★★★ · 2 ngày trước</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.7;">Phở ngon tuyệt! Nước dùng trong, thịt bò mềm, không ngấy. Quán đông nhưng phục vụ nhanh.</div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <div style="width:60px;height:50px;background:var(--surface2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">📸</div>
+              <div style="width:60px;height:50px;background:var(--surface2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;">📸</div>
+            </div>
+          </div>
+
+          <div class="wire-solid" style="padding:14px;">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;">👤</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;">Trần Thị B</div>
+                <div style="font-size:11px;color:var(--text2);">★★★★☆ · 5 ngày trước</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.7;">Phở khá ngon, giá hơi cao so với vị trí. Nhưng chất lượng xứng đáng.</div>
+          </div>
+        </div>
+
+        <button onclick="show('uc10')" class="btn btn-primary" style="align-self:flex-start;">✍ Viết đánh giá của bạn</button>
+      </div>
+    </div>
+
+    <!-- UC12: Đăng nhập Admin -->
+    <div class="screen" id="uc12">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;">
+        <div class="uc-badge" style="margin-bottom:20px;">UC12 – Đăng nhập Admin</div>
+        <div class="login-card">
+          <div style="text-align:center;margin-bottom:28px;">
+            <div style="font-size:36px;margin-bottom:8px;">🛡️</div>
+            <div style="font-family:'Playfair Display',serif;font-size:22px;">Admin Portal</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">Du lịch thông minh – Hệ thống quản trị</div>
+          </div>
+          <div class="flex flex-col gap-14">
+            <div class="field">
+              <label>Email quản trị</label>
+              <input type="email" placeholder="admin@tourism.vn">
+            </div>
+            <div class="field">
+              <label>Mật khẩu</label>
+              <input type="password" placeholder="••••••••">
+            </div>
+            <button onclick="show('uc13')" class="btn btn-primary" style="width:100%;justify-content:center;">Đăng nhập →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC13: Quản lý địa điểm -->
+    <div class="screen" id="uc13">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Quản lý địa điểm</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Thêm · Sửa · Xoá thông tin địa điểm du lịch</div>
+        </div>
+        <div class="uc-badge">UC13 – CRUD Địa điểm</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="search-bar" style="flex:1;max-width:360px;">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" placeholder="Tìm địa điểm...">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <select class="field" style="background:var(--surface2);border:1px solid var(--border);padding:8px 12px;border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;">
+              <option>Tất cả danh mục</option>
+            </select>
+            <button class="btn btn-primary btn-sm">＋ Thêm địa điểm</button>
+          </div>
+        </div>
+
+        <div class="wire-solid" style="overflow:hidden;">
+          <table class="wire-table">
+            <thead>
+              <tr>
+                <th>Địa điểm</th>
+                <th>Danh mục</th>
+                <th>Địa chỉ</th>
+                <th>Rating</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Văn Miếu Quốc Tử Giám</strong></td>
+                <td><span class="tag" style="display:inline;">Di tích</span></td>
+                <td style="color:var(--text2);">Đống Đa, Hà Nội</td>
+                <td><span class="rating">★ 4.8</span></td>
+                <td><span class="status active">Hiển thị</span></td>
+                <td><div style="display:flex;gap:6px;"><button class="btn btn-secondary btn-sm">✏️</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td><strong>Phở Thìn Lò Đúc</strong></td>
+                <td><span class="tag" style="display:inline;">Ẩm thực</span></td>
+                <td style="color:var(--text2);">Hai Bà Trưng, HN</td>
+                <td><span class="rating">★ 4.9</span></td>
+                <td><span class="status active">Hiển thị</span></td>
+                <td><div style="display:flex;gap:6px;"><button class="btn btn-secondary btn-sm">✏️</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td><strong>Hồ Hoàn Kiếm</strong></td>
+                <td><span class="tag" style="display:inline;">Thiên nhiên</span></td>
+                <td style="color:var(--text2);">Hoàn Kiếm, HN</td>
+                <td><span class="rating">★ 4.7</span></td>
+                <td><span class="status inactive">Ẩn</span></td>
+                <td><div style="display:flex;gap:6px;"><button class="btn btn-secondary btn-sm">✏️</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Edit form modal hint -->
+        <div class="wire-box" style="padding:16px;">
+          <span class="wire-label">Form Thêm / Chỉnh sửa địa điểm</span>
+          <div class="grid-2 gap-12" style="margin-top:8px;">
+            <div class="field"><label>Tên địa điểm</label><input placeholder="Nhập tên..."></div>
+            <div class="field"><label>Danh mục</label><select><option>Di tích</option><option>Ẩm thực</option></select></div>
+            <div class="field"><label>Địa chỉ</label><input placeholder="Số nhà, đường..."></div>
+            <div class="field"><label>Toạ độ (lat, lng)</label><input placeholder="21.0285, 105.8542"></div>
+            <div class="field" style="grid-column:1/-1;"><label>Mô tả</label><textarea rows="3" placeholder="Mô tả ngắn về địa điểm..."></textarea></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;">
+            <button class="btn btn-secondary btn-sm">Huỷ</button>
+            <button class="btn btn-primary btn-sm">💾 Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC14: Quản lý user -->
+    <div class="screen" id="uc14">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Quản lý người dùng</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Xem · Khoá · Mở khoá · Xoá tài khoản</div>
+        </div>
+        <div class="uc-badge">UC14 – Quản lý User</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="search-bar" style="flex:1;max-width:360px;">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" placeholder="Tìm theo tên, email...">
+          </div>
+          <select style="background:var(--surface2);border:1px solid var(--border);padding:9px 12px;border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;">
+            <option>Tất cả trạng thái</option>
+            <option>Hoạt động</option>
+            <option>Đã khoá</option>
+          </select>
+        </div>
+
+        <div class="wire-solid" style="overflow:hidden;">
+          <table class="wire-table">
+            <thead>
+              <tr>
+                <th>Người dùng</th>
+                <th>Email</th>
+                <th>Ngày đăng ký</th>
+                <th>Đánh giá</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="display:flex;gap:8px;align-items:center;"><div style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div><strong>Nguyễn Văn A</strong></div></td>
+                <td style="color:var(--text2);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="99f7feece0fcf7eff8f7f8d9fef4f8f0f5b7faf6f4">[email&#160;protected]</a></td>
+                <td style="color:var(--text2);">10/01/2025</td>
+                <td>12</td>
+                <td><span class="status active">Hoạt động</span></td>
+                <td><div style="display:flex;gap:4px;"><button class="btn btn-danger btn-sm">🔒 Khoá</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;gap:8px;align-items:center;"><div style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div><strong>Trần Thị B</strong></div></td>
+                <td style="color:var(--text2);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f18583909f85999893b1969c90989ddf929e9c">[email&#160;protected]</a></td>
+                <td style="color:var(--text2);">05/01/2025</td>
+                <td>7</td>
+                <td><span class="status inactive">Đã khoá</span></td>
+                <td><div style="display:flex;gap:4px;"><button class="btn btn-success btn-sm">🔓 Mở</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;gap:8px;align-items:center;"><div style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div><strong>Lê Văn C</strong></div></td>
+                <td style="color:var(--text2);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f69a9380979895b6919b979f9ad895999b">[email&#160;protected]</a></td>
+                <td style="color:var(--text2);">01/01/2025</td>
+                <td>3</td>
+                <td><span class="status active">Hoạt động</span></td>
+                <td><div style="display:flex;gap:4px;"><button class="btn btn-danger btn-sm">🔒 Khoá</button><button class="btn btn-danger btn-sm">🗑</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC15: Quản lý đánh giá -->
+    <div class="screen" id="uc15">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Quản lý đánh giá</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Duyệt · Ẩn · Xoá đánh giá vi phạm</div>
+        </div>
+        <div class="uc-badge">UC15 – Quản lý đánh giá</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+        <div style="display:flex;gap:8px;">
+          <div class="tag active">Chờ duyệt <span class="nav-badge" style="display:inline;">5</span></div>
+          <div class="tag">Đã duyệt</div>
+          <div class="tag">Đã ẩn</div>
+          <div class="tag">Tất cả</div>
+        </div>
+
+        <div class="flex flex-col gap-10">
+          <div class="wire-solid" style="padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+              <div>
+                <div style="font-size:13px;font-weight:600;">👤 Nguyễn Văn A · ★★★★★</div>
+                <div style="font-size:11px;color:var(--text2);">📍 Phở Thìn Lò Đúc · 2 ngày trước</div>
+              </div>
+              <span class="status pending">Chờ duyệt</span>
+            </div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;padding:10px;background:var(--surface2);border-radius:8px;">
+              Phở ngon tuyệt vời! Nước dùng trong, thịt mềm. Rất khuyến khích mọi người ghé thử.
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn btn-success btn-sm">✓ Duyệt</button>
+              <button class="btn btn-secondary btn-sm">👁 Ẩn</button>
+              <button class="btn btn-danger btn-sm">🗑 Xoá</button>
+              <button onclick="show('uc14')" class="btn btn-secondary btn-sm" style="margin-left:auto;">→ Xem tài khoản user</button>
+            </div>
+          </div>
+
+          <div class="wire-solid" style="padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+              <div>
+                <div style="font-size:13px;font-weight:600;">👤 Trần Thị B · ★☆☆☆☆</div>
+                <div style="font-size:11px;color:var(--text2);">📍 Văn Miếu · 1 ngày trước</div>
+              </div>
+              <span class="status pending">Chờ duyệt</span>
+            </div>
+            <div style="font-size:13px;color:var(--red);line-height:1.6;padding:10px;background:rgba(247,111,111,0.08);border-radius:8px;border:1px solid rgba(247,111,111,0.2);">
+              ⚠️ Nội dung có thể vi phạm: "Chỗ này tệ vcl, nhân viên thái độ kinh khủng..."
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn btn-danger btn-sm">🗑 Xoá vi phạm</button>
+              <button class="btn btn-secondary btn-sm">👁 Ẩn</button>
+              <button onclick="show('uc14')" class="btn btn-danger btn-sm" style="margin-left:auto;">🔒 Khoá tài khoản user</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC16: Thống kê -->
+    <div class="screen" id="uc16">
+      <div class="screen-header">
+        <div>
+          <div class="screen-title">Thống kê hệ thống</div>
+          <div style="color:var(--text2);font-size:13px;margin-top:4px;">Tổng quan · Hành vi người dùng · Địa điểm nổi bật</div>
+        </div>
+        <div class="uc-badge">UC16 – Thống kê</div>
+      </div>
+
+      <div class="screen-body flex flex-col gap-16">
+
+        <!-- KPIs -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-value">1,284</div>
+            <div class="stat-label">Người dùng</div>
+            <div class="stat-trend">↑ +12% tháng này</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:var(--accent2);">342</div>
+            <div class="stat-label">Địa điểm</div>
+            <div class="stat-trend">↑ +5 mới</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:var(--green);">4,821</div>
+            <div class="stat-label">Đánh giá</div>
+            <div class="stat-trend">↑ +89 hôm nay</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:var(--red);">23</div>
+            <div class="stat-label">Chờ duyệt</div>
+            <div class="stat-trend" style="color:var(--accent2);">⚠ Cần xử lý</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid-2 gap-16">
+          <div class="wire-solid" style="padding:16px;">
+            <div class="section-heading">Lượt truy cập 7 ngày</div>
+            <div class="bar-chart">
+              <div class="bar" style="height:40%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T2</div></div>
+              <div class="bar" style="height:65%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T3</div></div>
+              <div class="bar" style="height:50%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T4</div></div>
+              <div class="bar" style="height:80%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T5</div></div>
+              <div class="bar" style="height:95%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T6</div></div>
+              <div class="bar" style="height:70%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">T7</div></div>
+              <div class="bar" style="height:55%;"><div style="font-size:9px;color:var(--text2);text-align:center;margin-top:-14px;">CN</div></div>
+            </div>
+          </div>
+
+          <div class="wire-solid" style="padding:16px;">
+            <div class="section-heading">Địa điểm được xem nhiều nhất</div>
+            <div class="flex flex-col gap-8">
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+                <span style="color:var(--accent2);font-weight:700;">1</span>
+                <div style="flex:1;">Hồ Hoàn Kiếm</div>
+                <div style="width:60%;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                  <div style="width:92%;height:100%;background:var(--accent);border-radius:3px;"></div>
+                </div>
+                <span style="color:var(--text2);font-size:12px;min-width:40px;text-align:right;">1,240</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+                <span style="color:var(--text2);font-weight:700;">2</span>
+                <div style="flex:1;">Văn Miếu</div>
+                <div style="width:60%;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                  <div style="width:74%;height:100%;background:var(--accent);border-radius:3px;"></div>
+                </div>
+                <span style="color:var(--text2);font-size:12px;min-width:40px;text-align:right;">980</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+                <span style="color:var(--text2);font-weight:700;">3</span>
+                <div style="flex:1;">Phở Thìn Lò Đúc</div>
+                <div style="width:60%;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                  <div style="width:55%;height:100%;background:var(--accent);border-radius:3px;"></div>
+                </div>
+                <span style="color:var(--text2);font-size:12px;min-width:40px;text-align:right;">720</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="wire-solid" style="overflow:hidden;">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;">Hoạt động gần đây</div>
+          <table class="wire-table">
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Hành động</th>
+                <th>Đối tượng</th>
+                <th>Người dùng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:var(--text2);font-size:12px;">2 phút trước</td>
+                <td><span class="status active">Đánh giá mới</span></td>
+                <td>Phở Thìn Lò Đúc</td>
+                <td style="color:var(--text2);">Nguyễn Văn A</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);font-size:12px;">15 phút trước</td>
+                <td><span class="status pending">Kế hoạch tạo</span></td>
+                <td>Hà Nội 2 ngày</td>
+                <td style="color:var(--text2);">Trần Thị B</td>
+              </tr>
+              <tr>
+                <td style="color:var(--text2);font-size:12px;">1 giờ trước</td>
+                <td><span class="status inactive">Tài khoản khoá</span></td>
+                <td>user_xyz123</td>
+                <td style="color:var(--text2);">Admin</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end .main -->
+</div><!-- end .app-shell -->
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+</style>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ===== NAVIGATION =====
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n) {
+    var oc = n.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) n.classList.add('active');
+  });
+}
+
+// ===== CAROUSEL =====
+var carouselIndex = 0;
+var maxIndex = 2;
+
+function slideCarousel(dir) {
+  carouselIndex = Math.max(0, Math.min(maxIndex, carouselIndex + dir));
+  updateCarousel();
+}
+
+function goToSlide(i) {
+  carouselIndex = i;
+  updateCarousel();
+}
+
+function updateCarousel() {
+  var track = document.getElementById('carouselTrack');
+  if (!track || !track.children[0]) return;
+  var slideWidth = track.children[0].offsetWidth + 16;
+  track.style.transform = 'translateX(-' + (carouselIndex * slideWidth) + 'px)';
+  var dots = document.querySelectorAll('.carousel-dot');
+  dots.forEach(function(d, i){ d.classList.toggle('active', i === carouselIndex); });
+}
+
+setInterval(function() {
+  var home = document.getElementById('home');
+  if (home && home.classList.contains('active')) {
+    carouselIndex = carouselIndex >= maxIndex ? 0 : carouselIndex + 1;
+    updateCarousel();
+  }
+}, 3500);
+</script>
+</body>
+</html>

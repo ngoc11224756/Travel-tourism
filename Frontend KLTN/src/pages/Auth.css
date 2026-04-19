@@ -1,0 +1,439 @@
+/* ========================================
+   AUTH.CSS – Login & Register shared styles
+   ======================================== */
+
+/* ===== LAYOUT: 2 cột full screen ===== */
+.auth-shell {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== CỘT TRÁI – Visual ===== */
+.auth-visual {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #060c1a 0%, #0d1f3e 35%, #0a2a4a 65%, #061525 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+/* Gradient overlay */
+.auth-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(79,142,247,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 80% 70%, rgba(79,209,165,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 60% 20%, rgba(247,168,79,0.08) 0%, transparent 50%);
+}
+
+/* Dot grid pattern */
+.auth-visual-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Animated map markers decoration */
+.auth-deco-marker {
+  position: absolute;
+  font-size: 22px;
+  opacity: 0.25;
+  animation: floatMarker 4s ease-in-out infinite;
+  pointer-events: none;
+  filter: blur(0.5px);
+}
+
+@keyframes floatMarker {
+  0%, 100% { transform: translateY(0px); opacity: 0.25; }
+  50%       { transform: translateY(-12px); opacity: 0.45; }
+}
+
+/* Visual content */
+.auth-visual-content {
+  position: relative;
+  z-index: 2;
+  max-width: 420px;
+}
+
+.auth-visual-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.auth-visual-logo-icon { font-size: 28px; }
+
+.auth-visual-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+
+.auth-visual-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  line-height: 1.2;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.auth-visual-headline span {
+  color: var(--accent2);
+  position: relative;
+}
+
+.auth-visual-headline span::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent2);
+  opacity: 0.5;
+  border-radius: 2px;
+}
+
+.auth-visual-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* Stats row */
+.auth-visual-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px 20px;
+  backdrop-filter: blur(8px);
+}
+
+.auth-stat { text-align: center; }
+
+.auth-stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.auth-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 3px;
+}
+
+.auth-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* Benefits list (Register page) */
+.auth-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+}
+
+.auth-benefit-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(79,142,247,0.15);
+  border: 1px solid rgba(79,142,247,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ===== CỘT PHẢI – Form panel ===== */
+.auth-form-panel {
+  width: 480px;
+  flex-shrink: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 40px;
+  overflow-y: auto;
+  border-left: 1px solid var(--border);
+}
+
+.auth-form-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form header */
+.auth-form-header { text-align: left; }
+
+.auth-form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.auth-form-sub {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* Error banner */
+.auth-error {
+  background: rgba(247,111,111,0.1);
+  border: 1px solid rgba(247,111,111,0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--red);
+}
+
+/* Form layout */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Field */
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.3px;
+}
+
+/* Input wrapper */
+.auth-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+}
+
+.auth-input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79,142,247,0.12);
+}
+
+.auth-input-wrap.error {
+  border-color: var(--red);
+}
+
+.auth-input-wrap.error:focus-within {
+  box-shadow: 0 0 0 3px rgba(247,111,111,0.12);
+}
+
+.auth-input-icon {
+  padding: 0 12px;
+  font-size: 15px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.auth-input-wrap input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 11px 0;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.auth-input-wrap input::placeholder { color: var(--text2); }
+
+.auth-eye-btn {
+  background: none;
+  border: none;
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 15px;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.auth-eye-btn:hover { opacity: 1; }
+.auth-eye-btn.eye-open {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(80%) saturate(400%) hue-rotate(180deg);
+}
+
+.auth-eye-btn.eye-closed {
+  filter: brightness(0) saturate(100%) invert(60%) sepia(0%) saturate(0%);
+}
+/* Field error message */
+.auth-field-error {
+  font-size: 11px;
+  color: var(--red);
+  padding-left: 4px;
+}
+
+/* Password strength */
+.auth-strength {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.auth-strength-bar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.auth-strength-seg {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+/* Submit button */
+.auth-submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background: #3a7ef0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79,142,247,0.35);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.auth-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text2);
+  font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Social buttons */
+.auth-social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text2);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.auth-social-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--surface2);
+}
+
+/* Link style */
+.auth-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.auth-link:hover { opacity: 0.8; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .auth-visual { display: none; }
+  .auth-form-panel {
+    width: 100%;
+    border-left: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form-panel { padding: 24px 20px; }
+  .auth-form-title { font-size: 24px; }
+}
